@@ -36,12 +36,47 @@
 /**
  * @ingroup xsimd_config_macro
  *
+ * Set to 1 if runtime-checkable extensions should be optionally available when possible, 0 otherwise.
+ */
+#ifndef XSIMD_OPTIONAL_ALL
+#define XSIMD_OPTIONAL_ALL 0
+#endif
+
+/**
+ * @ingroup xsimd_config_macro
+ *
+ * Set to 1 if SSE/FMA/AVX extensions are optionally available on x86/x64, 0 otherwise
+ */
+#ifndef XSIMD_OPTIONAL_X86
+#if XSIMD_OPTIONAL_ALL && (defined(__i386__) || defined(__x86_64__))
+#define XSIMD_OPTIONAL_X86 1
+#else
+#define XSIMD_OPTIONAL_X86 0
+#endif
+#endif
+
+/**
+ * @ingroup xsimd_config_macro
+ *
+ * Set to 1 if NEON(64) extensions are optionally available on ARM, 0 otherwise
+ */
+#ifndef XSIMD_OPTIONAL_ARM
+#if XSIMD_OPTIONAL_ALL && (defined(__arm__) || defined(__aarch64__))
+#define XSIMD_OPTIONAL_ARM 1
+#else
+#define XSIMD_OPTIONAL_ARM 0
+#endif
+#endif
+
+/**
+ * @ingroup xsimd_config_macro
+ *
  * Set to 2 if SSE2 is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __SSE2__
 #define XSIMD_WITH_SSE2 2
 #else
-#define XSIMD_WITH_SSE2 0
+#define XSIMD_WITH_SSE2 XSIMD_OPTIONAL_X86
 #endif
 
 /**
@@ -52,7 +87,7 @@
 #ifdef __SSE3__
 #define XSIMD_WITH_SSE3 2
 #else
-#define XSIMD_WITH_SSE3 0
+#define XSIMD_WITH_SSE3 XSIMD_OPTIONAL_X86
 #endif
 
 /**
@@ -63,7 +98,7 @@
 #ifdef __SSSE3__
 #define XSIMD_WITH_SSSE3 2
 #else
-#define XSIMD_WITH_SSSE3 0
+#define XSIMD_WITH_SSSE3 XSIMD_OPTIONAL_X86
 #endif
 
 /**
@@ -74,7 +109,7 @@
 #ifdef __SSE4_1__
 #define XSIMD_WITH_SSE4_1 2
 #else
-#define XSIMD_WITH_SSE4_1 0
+#define XSIMD_WITH_SSE4_1 XSIMD_OPTIONAL_X86
 #endif
 
 /**
@@ -85,7 +120,7 @@
 #ifdef __SSE4_2__
 #define XSIMD_WITH_SSE4_2 2
 #else
-#define XSIMD_WITH_SSE4_2 0
+#define XSIMD_WITH_SSE4_2 XSIMD_OPTIONAL_X86
 #endif
 
 /**
@@ -96,7 +131,7 @@
 #ifdef __AVX__
 #define XSIMD_WITH_AVX 2
 #else
-#define XSIMD_WITH_AVX 0
+#define XSIMD_WITH_AVX XSIMD_OPTIONAL_X86
 #endif
 
 /**
@@ -107,7 +142,7 @@
 #ifdef __AVX2__
 #define XSIMD_WITH_AVX2 2
 #else
-#define XSIMD_WITH_AVX2 0
+#define XSIMD_WITH_AVX2 XSIMD_OPTIONAL_X86
 #endif
 
 /**
@@ -118,7 +153,7 @@
 #ifdef __AVXVNNI__
 #define XSIMD_WITH_AVXVNNI 2
 #else
-#define XSIMD_WITH_AVXVNNI 0
+#define XSIMD_WITH_AVXVNNI XSIMD_OPTIONAL_X86
 #endif
 
 /**
@@ -134,20 +169,20 @@
 #endif
 #else
 
-#if XSIMD_WITH_FMA3_SSE
+#if XSIMD_WITH_FMA3_SSE > 1
 #error "Manually set XSIMD_WITH_FMA3_SSE is incompatible with current compiler flags"
 #endif
 
-#define XSIMD_WITH_FMA3_SSE 0
+#define XSIMD_WITH_FMA3_SSE XSIMD_OPTIONAL_X86
 #endif
 
 #else
 
-#if XSIMD_WITH_FMA3_SSE
+#if XSIMD_WITH_FMA3_SSE > 1
 #error "Manually set XSIMD_WITH_FMA3_SSE is incompatible with current compiler flags"
 #endif
 
-#define XSIMD_WITH_FMA3_SSE 0
+#define XSIMD_WITH_FMA3_SSE XSIMD_OPTIONAL_X86
 #endif
 
 /**
@@ -167,7 +202,7 @@
 #error "Manually set XSIMD_WITH_FMA3_AVX is incompatible with current compiler flags"
 #endif
 
-#define XSIMD_WITH_FMA3_AVX 0
+#define XSIMD_WITH_FMA3_AVX XSIMD_OPTIONAL_X86
 #endif
 
 #if defined(__AVX2__)
@@ -180,21 +215,21 @@
 #error "Manually set XSIMD_WITH_FMA3_AVX2 is incompatible with current compiler flags"
 #endif
 
-#define XSIMD_WITH_FMA3_AVX2 0
+#define XSIMD_WITH_FMA3_AVX2 XSIMD_OPTIONAL_X86
 #endif
 
 #else
 
-#if XSIMD_WITH_FMA3_AVX
+#if XSIMD_WITH_FMA3_AVX > 1
 #error "Manually set XSIMD_WITH_FMA3_AVX is incompatible with current compiler flags"
 #endif
 
-#if XSIMD_WITH_FMA3_AVX2
+#if XSIMD_WITH_FMA3_AVX2 > 1
 #error "Manually set XSIMD_WITH_FMA3_AVX2 is incompatible with current compiler flags"
 #endif
 
-#define XSIMD_WITH_FMA3_AVX 0
-#define XSIMD_WITH_FMA3_AVX2 0
+#define XSIMD_WITH_FMA3_AVX XSIMD_OPTIONAL_X86
+#define XSIMD_WITH_FMA3_AVX2 XSIMD_OPTIONAL_X86
 
 #endif
 
@@ -206,7 +241,21 @@
 #ifdef __FMA4__
 #define XSIMD_WITH_FMA4 2
 #else
-#define XSIMD_WITH_FMA4 0
+#define XSIMD_WITH_FMA4 XSIMD_OPTIONAL_X86
+#endif
+
+// AVX512 instructions are supported starting with gcc 6
+// see https://www.gnu.org/software/gcc/gcc-6/changes.html
+// Check clang first, newer clang always defines __GNUC__ = 4
+#if !(defined(__clang__) && __clang_major__ >= 6) && defined(__GNUC__) && __GNUC__ < 6
+#define XSIMD_ALLOWED_AVX512 0
+#define XSIMD_OPTIONAL_AVX512 0
+#else
+#define XSIMD_ALLOWED_AVX512 1
+#define XSIMD_OPTIONAL_AVX512 XSIMD_OPTIONAL_X86
+#if __GNUC__ == 6
+#define XSIMD_AVX512_SHIFT_INTRINSICS_IMM_ONLY 1
+#endif
 #endif
 
 /**
@@ -215,22 +264,9 @@
  * Set to 2 if AVX512F is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512F__
-#define XSIMD_WITH_AVX512F 2
+#define XSIMD_WITH_AVX512F XSIMD_ALLOWED_AVX512
 #else
-#define XSIMD_WITH_AVX512F 0
-#endif
-
-// AVX512 instructions are supported starting with gcc 6
-// see https://www.gnu.org/software/gcc/gcc-6/changes.html
-#if XSIMD_WITH_AVX512F
-// check clang first, newer clang always defines __GNUC__ = 4
-#if defined(__clang__) && __clang_major__ >= 6
-#elif defined(__GNUC__) && __GNUC__ < 6
-#undef XSIMD_WITH_AVX512F
-#define XSIMD_WITH_AVX512F 0
-#elif __GNUC__ == 6
-#define XSIMD_AVX512_SHIFT_INTRINSICS_IMM_ONLY 1
-#endif
+#define XSIMD_WITH_AVX512F XSIMD_OPTIONAL_AVX512
 #endif
 
 /**
@@ -239,10 +275,9 @@
  * Set to 2 if AVX512CD is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512CD__
-// Avoids repeating the GCC workaround over and over
-#define XSIMD_WITH_AVX512CD XSIMD_WITH_AVX512F
+#define XSIMD_WITH_AVX512CD XSIMD_ALLOWED_AVX512
 #else
-#define XSIMD_WITH_AVX512CD 0
+#define XSIMD_WITH_AVX512CD XSIMD_OPTIONAL_AVX512
 #endif
 
 /**
@@ -251,9 +286,9 @@
  * Set to 2 if AVX512DQ is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512DQ__
-#define XSIMD_WITH_AVX512DQ XSIMD_WITH_AVX512F
+#define XSIMD_WITH_AVX512DQ XSIMD_ALLOWED_AVX512
 #else
-#define XSIMD_WITH_AVX512DQ 0
+#define XSIMD_WITH_AVX512DQ XSIMD_OPTIONAL_AVX512
 #endif
 
 /**
@@ -262,9 +297,9 @@
  * Set to 2 if AVX512BW is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512BW__
-#define XSIMD_WITH_AVX512BW XSIMD_WITH_AVX512F
+#define XSIMD_WITH_AVX512BW XSIMD_ALLOWED_AVX512
 #else
-#define XSIMD_WITH_AVX512BW 0
+#define XSIMD_WITH_AVX512BW XSIMD_OPTIONAL_AVX512
 #endif
 
 /**
@@ -273,9 +308,9 @@
  * Set to 2 if AVX512ER is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512ER__
-#define XSIMD_WITH_AVX512ER XSIMD_WITH_AVX512F
+#define XSIMD_WITH_AVX512ER XSIMD_ALLOWED_AVX512
 #else
-#define XSIMD_WITH_AVX512ER 0
+#define XSIMD_WITH_AVX512ER XSIMD_OPTIONAL_AVX512
 #endif
 
 /**
@@ -284,9 +319,9 @@
  * Set to 2 if AVX512PF is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512PF__
-#define XSIMD_WITH_AVX512PF XSIMD_WITH_AVX512F
+#define XSIMD_WITH_AVX512PF XSIMD_ALLOWED_AVX512
 #else
-#define XSIMD_WITH_AVX512PF 0
+#define XSIMD_WITH_AVX512PF XSIMD_OPTIONAL_AVX512
 #endif
 
 /**
@@ -295,9 +330,9 @@
  * Set to 2 if AVX512IFMA is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512IFMA__
-#define XSIMD_WITH_AVX512IFMA XSIMD_WITH_AVX512F
+#define XSIMD_WITH_AVX512IFMA XSIMD_ALLOWED_AVX512
 #else
-#define XSIMD_WITH_AVX512IFMA 0
+#define XSIMD_WITH_AVX512IFMA XSIMD_OPTIONAL_AVX512
 #endif
 
 /**
@@ -306,9 +341,9 @@
  * Set to 2 if AVX512VBMI is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512VBMI__
-#define XSIMD_WITH_AVX512VBMI XSIMD_WITH_AVX512F
+#define XSIMD_WITH_AVX512VBMI XSIMD_ALLOWED_AVX512
 #else
-#define XSIMD_WITH_AVX512VBMI 0
+#define XSIMD_WITH_AVX512VBMI XSIMD_OPTIONAL_AVX512
 #endif
 
 /**
@@ -317,9 +352,9 @@
  * Set to 2 if AVX512VBMI2 is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512VBMI2__
-#define XSIMD_WITH_AVX512VBMI2 XSIMD_WITH_AVX512F
+#define XSIMD_WITH_AVX512VBMI2 XSIMD_ALLOWED_AVX512
 #else
-#define XSIMD_WITH_AVX512VBMI2 0
+#define XSIMD_WITH_AVX512VBMI2 XSIMD_OPTIONAL_AVX512
 #endif
 
 /**
@@ -330,17 +365,17 @@
 #ifdef __AVX512VNNI__
 
 #if XSIMD_WITH_AVX512VBMI2
-#define XSIMD_WITH_AVX512VNNI_AVX512VBMI2 XSIMD_WITH_AVX512F
-#define XSIMD_WITH_AVX512VNNI_AVX512BW XSIMD_WITH_AVX512F
+#define XSIMD_WITH_AVX512VNNI_AVX512VBMI2 XSIMD_ALLOWED_AVX512
+#define XSIMD_WITH_AVX512VNNI_AVX512BW XSIMD_ALLOWED_AVX512
 #else
-#define XSIMD_WITH_AVX512VNNI_AVX512VBMI2 0
-#define XSIMD_WITH_AVX512VNNI_AVX512BW XSIMD_WITH_AVX512F
+#define XSIMD_WITH_AVX512VNNI_AVX512VBMI2 XSIMD_OPTIONAL_AVX512
+#define XSIMD_WITH_AVX512VNNI_AVX512BW XSIMD_ALLOWED_AVX512
 #endif
 
 #else
 
-#define XSIMD_WITH_AVX512VNNI_AVX512VBMI2 0
-#define XSIMD_WITH_AVX512VNNI_AVX512BW 0
+#define XSIMD_WITH_AVX512VNNI_AVX512VBMI2 XSIMD_OPTIONAL_AVX512
+#define XSIMD_WITH_AVX512VNNI_AVX512BW XSIMD_OPTIONAL_AVX512
 
 #endif
 
@@ -352,7 +387,7 @@
 #if defined(__aarch64__) || defined(_M_ARM64)
 #define XSIMD_WITH_NEON64 2
 #else
-#define XSIMD_WITH_NEON64 0
+#define XSIMD_WITH_NEON64 XSIMD_OPTIONAL_ARM
 #endif
 
 /**
@@ -360,10 +395,10 @@
  *
  * Set to 2 if NEON is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
-#if (defined(__ARM_NEON) && __ARM_ARCH >= 7) || XSIMD_WITH_NEON64
+#if (defined(__ARM_NEON) && __ARM_ARCH >= 7) || XSIMD_WITH_NEON64 > 1
 #define XSIMD_WITH_NEON 2
 #else
-#define XSIMD_WITH_NEON 0
+#define XSIMD_WITH_NEON XSIMD_OPTIONAL_ARM
 #endif
 
 /**
@@ -374,7 +409,7 @@
 #if defined(__ARM_FEATURE_MATMUL_INT8)
 #define XSIMD_WITH_I8MM_NEON64 2
 #else
-#define XSIMD_WITH_I8MM_NEON64 0
+#define XSIMD_WITH_I8MM_NEON64 XSIMD_OPTIONAL_ARM
 #endif
 
 /**
@@ -476,9 +511,12 @@
 
 #endif
 
-#if XSIMD_WITH_SSE3 || ((defined(_M_AMD64) || defined(_M_X64)) && !defined(_M_ARM64EC)) || (defined(_M_IX86_FP) && _M_IX86_FP >= 2)
+#if ((defined(_M_AMD64) || defined(_M_X64)) && !defined(_M_ARM64EC)) || (defined(_M_IX86_FP) && _M_IX86_FP >= 2)
 #undef XSIMD_WITH_SSE2
 #define XSIMD_WITH_SSE2 2
+#elif XSIMD_WITH_SSE3
+#undef XSIMD_WITH_SSE2
+#define XSIMD_WITH_SSE2 XSIMD_WITH_SSE3
 #endif
 
 #endif
