@@ -28,7 +28,9 @@ namespace xsimd
     {
         /// Whether this architecture is supported at compile-time.
         static constexpr bool supported() noexcept { return true; }
-        /// Whether this architecture is available at run-time.
+        /// Whether this architecture is not supported at compile-time, can be used with a run-time CPU check
+        static constexpr bool optional() noexcept { return true; }
+        /// Whether this architecture is available at run-time as a valid dispatch target
         static constexpr bool available() noexcept { return true; }
         /// If this architectures supports aligned memory accesses, the required
         /// alignment.

@@ -23,14 +23,15 @@ namespace xsimd
      */
     struct avxvnni : avx2
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_AVXVNNI; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_AVXVNNI > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_AVXVNNI == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr char const* name() noexcept { return "avxvnni"; }
     };
 
 #if XSIMD_WITH_AVXVNNI
 
-#if !XSIMD_WITH_AVX2
+#if XSIMD_WITH_AVX2 < XSIMD_WITH_AVXVNNI
 #error "architecture inconsistency: avxvnni requires avx2"
 #endif
 

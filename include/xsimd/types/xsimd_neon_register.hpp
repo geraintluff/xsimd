@@ -28,7 +28,8 @@ namespace xsimd
      */
     struct neon : common
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_NEON; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_NEON > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_NEON == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr bool requires_alignment() noexcept { return true; }
         static constexpr std::size_t alignment() noexcept { return 16; }

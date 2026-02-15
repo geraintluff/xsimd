@@ -27,14 +27,15 @@ namespace xsimd
      */
     struct sse4_2 : sse4_1
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_SSE4_2; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_SSE4_2 > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_SSE4_2 == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr char const* name() noexcept { return "sse4.2"; }
     };
 
 #if XSIMD_WITH_SSE4_2
 
-#if !XSIMD_WITH_SSE4_1
+#if XSIMD_WITH_SSE4_1 < XSIMD_WITH_SSE4_2
 #error "architecture inconsistency: sse4.2 requires sse4.1"
 #endif
 

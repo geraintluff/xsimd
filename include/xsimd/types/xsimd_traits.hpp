@@ -75,10 +75,10 @@ namespace xsimd
         struct static_check_supported_config_emitter
         {
 
-            static_assert(A::supported(),
-                          "usage of batch type with unsupported architecture");
-            static_assert(!A::supported() || xsimd::has_simd_register<T, A>::value,
-                          "usage of batch type with unsupported type");
+            static_assert(A::supported() || A::optional(),
+                          "usage of batch type without supported/optional architecture");
+            static_assert((!A::supported() && !A::optional()) || xsimd::has_simd_register<T, A>::value,
+                          "usage of batch type without supported/optional type");
         };
 
         template <class A>

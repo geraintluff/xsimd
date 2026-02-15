@@ -27,14 +27,15 @@ namespace xsimd
      */
     struct fma4 : sse4_2
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_FMA4; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_FMA4 > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_FMA4 == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr char const* name() noexcept { return "fma4"; }
     };
 
 #if XSIMD_WITH_FMA4
 
-#if !XSIMD_WITH_SSE4_2
+#if XSIMD_WITH_SSE4_2 < XSIMD_WITH_FMA4
 #error "architecture inconsistency: fma4 requires sse4.2"
 #endif
 

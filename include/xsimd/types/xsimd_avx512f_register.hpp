@@ -24,7 +24,8 @@ namespace xsimd
      */
     struct avx512f : common
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_AVX512F; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_AVX512F > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_AVX512F == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr std::size_t alignment() noexcept { return 64; }
         static constexpr bool requires_alignment() noexcept { return true; }
@@ -33,7 +34,7 @@ namespace xsimd
 
 #if XSIMD_WITH_AVX512F
 
-#if !XSIMD_WITH_AVX2
+#if XSIMD_WITH_AVX2 < XSIMD_WITH_AVX512F
 #error "architecture inconsistency: avx512f requires avx2"
 #endif
 

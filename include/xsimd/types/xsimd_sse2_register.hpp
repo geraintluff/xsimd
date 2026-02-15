@@ -29,7 +29,8 @@ namespace xsimd
      */
     struct sse2 : common
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_SSE2; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_SSE2 > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_SSE2 == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr bool requires_alignment() noexcept { return true; }
         static constexpr std::size_t alignment() noexcept { return 16; }

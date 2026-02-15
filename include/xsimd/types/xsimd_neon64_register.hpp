@@ -23,7 +23,8 @@ namespace xsimd
      */
     struct neon64 : neon
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_NEON64; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_NEON64 > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_NEON64 == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr bool requires_alignment() noexcept { return true; }
         static constexpr std::size_t alignment() noexcept { return 16; }
@@ -32,7 +33,7 @@ namespace xsimd
 
 #if XSIMD_WITH_NEON64
 
-#if !XSIMD_WITH_NEON
+#if XSIMD_WITH_NEON < XSIMD_WITH_NEON64
 #error "architecture inconsistency: neon64 requires neon"
 #endif
 

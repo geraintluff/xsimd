@@ -24,14 +24,15 @@ namespace xsimd
      */
     struct avx512dq : avx512cd
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_AVX512DQ; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_AVX512DQ > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_AVX512DQ == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr char const* name() noexcept { return "avx512dq"; }
     };
 
 #if XSIMD_WITH_AVX512DQ
 
-#if !XSIMD_WITH_AVX512CD
+#if XSIMD_WITH_AVX512CD < XSIMD_WITH_AVX512DQ
 #error "architecture inconsistency: avx512dq requires avx512cd"
 #endif
 

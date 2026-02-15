@@ -27,14 +27,15 @@ namespace xsimd
     template <>
     struct fma3<avx> : avx
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_FMA3_AVX; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_FMA3_AVX > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_FMA3_AVX == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr char const* name() noexcept { return "fma3+avx"; }
     };
 
 #if XSIMD_WITH_FMA3_AVX
 
-#if !XSIMD_WITH_AVX
+#if XSIMD_WITH_AVX < XSIMD_WITH_FMA3_AVX
 #error "architecture inconsistency: fma3+avx requires avx"
 #endif
 

@@ -27,14 +27,15 @@ namespace xsimd
     template <>
     struct avx512vnni<avx512bw> : avx512bw
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_AVX512VNNI_AVX512BW; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_AVX512VNNI_AVX512BW > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_AVX512VNNI_AVX512BW == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr char const* name() noexcept { return "avx512vnni+avx512bw"; }
     };
 
 #if XSIMD_WITH_AVX512VNNI_AVX512BW
 
-#if !XSIMD_WITH_AVX512BW
+#if XSIMD_WITH_AVX512BW < XSIMD_WITH_AVX512VNNI_AVX512BW
 #error "architecture inconsistency: avx512vnni+avx512bw requires avx512bw"
 #endif
 

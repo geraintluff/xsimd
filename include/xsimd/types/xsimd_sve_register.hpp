@@ -33,6 +33,7 @@ namespace xsimd
         struct sve : xsimd::common
         {
             static constexpr bool supported() noexcept { return Width == XSIMD_SVE_BITS; }
+            static constexpr bool optional() noexcept { return false; } // no runtime check
             static constexpr bool available() noexcept { return true; }
             static constexpr bool requires_alignment() noexcept { return true; }
             static constexpr std::size_t alignment() noexcept { return 16; }

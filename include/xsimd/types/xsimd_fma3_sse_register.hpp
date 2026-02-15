@@ -27,14 +27,15 @@ namespace xsimd
     template <>
     struct fma3<sse4_2> : sse4_2
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_FMA3_SSE; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_FMA3_SSE > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_FMA3_SSE == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr char const* name() noexcept { return "fma3+sse4.2"; }
     };
 
 #if XSIMD_WITH_FMA3_SSE
 
-#if !XSIMD_WITH_SSE4_2
+#if XSIMD_WITH_SSE4_2 < XSIMD_WITH_FMA3_SSE
 #error "architecture inconsistency: fma3+sse4.2 requires sse4.2"
 #endif
 

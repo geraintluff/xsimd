@@ -26,6 +26,7 @@ namespace xsimd
     struct emulated : common
     {
         static constexpr bool supported() noexcept { return true; }
+        static constexpr bool optional() noexcept { return false; }
         static constexpr bool available() noexcept { return true; }
         static constexpr bool requires_alignment() noexcept { return false; }
         static constexpr std::size_t alignment() noexcept { return 8; }

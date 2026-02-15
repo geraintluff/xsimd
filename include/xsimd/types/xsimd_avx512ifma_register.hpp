@@ -24,14 +24,15 @@ namespace xsimd
      */
     struct avx512ifma : avx512bw
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_AVX512IFMA; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_AVX512IFMA > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_AVX512IFMA == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr char const* name() noexcept { return "avx512ifma"; }
     };
 
 #if XSIMD_WITH_AVX512IFMA
 
-#if !XSIMD_WITH_AVX512BW
+#if XSIMD_WITH_AVX512BW < XSIMD_WITH_AVX512IFMA
 #error "architecture inconsistency: avx512ifma requires avx512bw"
 #endif
 

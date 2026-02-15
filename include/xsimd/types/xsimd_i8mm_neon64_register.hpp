@@ -27,14 +27,15 @@ namespace xsimd
     template <>
     struct i8mm<neon64> : neon64
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_I8MM_NEON64; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_I8MM_NEON64 > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_I8MM_NEON64 == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr char const* name() noexcept { return "i8mm+neon64"; }
     };
 
 #if XSIMD_WITH_I8MM_NEON64
 
-#if !XSIMD_WITH_NEON64
+#if XSIMD_WITH_NEON64 < XSIMD_WITH_I8MM_NEON64
 #error "architecture inconsistency: i8mm+neon64 requires neon64"
 #endif
 

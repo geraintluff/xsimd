@@ -24,7 +24,8 @@ namespace xsimd
      */
     struct avx : common
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_AVX; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_AVX > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_AVX == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr std::size_t alignment() noexcept { return 32; }
         static constexpr bool requires_alignment() noexcept { return true; }
@@ -34,7 +35,7 @@ namespace xsimd
 
 #if XSIMD_WITH_AVX
 
-#if !XSIMD_WITH_SSE4_2
+#if XSIMD_WITH_SSE4_2 < XSIMD_WITH_AVX
 #error "architecture inconsistency: avx requires sse4.2"
 #endif
 

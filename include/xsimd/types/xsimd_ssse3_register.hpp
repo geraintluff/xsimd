@@ -27,14 +27,15 @@ namespace xsimd
      */
     struct ssse3 : sse3
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_SSSE3; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_SSSE3 > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_SSSE3 == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr char const* name() noexcept { return "ssse3"; }
     };
 
 #if XSIMD_WITH_SSSE3
 
-#if !XSIMD_WITH_SSE3
+#if XSIMD_WITH_SSE3 < XSIMD_WITH_SSSE3
 #error "architecture inconsistency: ssse3 requires sse3"
 #endif
 

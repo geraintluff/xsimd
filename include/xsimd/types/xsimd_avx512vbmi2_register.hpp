@@ -24,14 +24,15 @@ namespace xsimd
      */
     struct avx512vbmi2 : avx512vbmi
     {
-        static constexpr bool supported() noexcept { return XSIMD_WITH_AVX512VBMI2; }
+        static constexpr bool supported() noexcept { return XSIMD_WITH_AVX512VBMI2 > 1; }
+        static constexpr bool optional() noexcept { return XSIMD_WITH_AVX512VBMI2 == 1; }
         static constexpr bool available() noexcept { return true; }
         static constexpr char const* name() noexcept { return "avx512vbmi2"; }
     };
 
 #if XSIMD_WITH_AVX512VBMI2
 
-#if !XSIMD_WITH_AVX512VBMI
+#if XSIMD_WITH_AVX512VBMI < XSIMD_WITH_AVX512VBMI2
 #error "architecture inconsistency: avx512vbmi2 requires avx512vbmi"
 #endif
 

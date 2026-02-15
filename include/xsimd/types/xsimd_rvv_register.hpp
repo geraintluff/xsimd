@@ -34,6 +34,7 @@ namespace xsimd
         {
             static constexpr size_t width = Width;
             static constexpr bool supported() noexcept { return Width == XSIMD_RVV_BITS; }
+            static constexpr bool optional() noexcept { return false; } // no runtime check available
             static constexpr bool available() noexcept { return true; }
             static constexpr bool requires_alignment() noexcept { return true; }
             static constexpr std::size_t alignment() noexcept { return 16; }
