@@ -29,7 +29,7 @@ namespace xsimd
     struct vsx : common
     {
         static constexpr bool supported() noexcept { return XSIMD_WITH_VSX > 1; }
-        static constexpr bool optional() noexcept { false; } // no runtime check
+        static constexpr bool optional() noexcept { return false; } // no runtime check
         static constexpr bool available() noexcept { return true; }
         static constexpr bool requires_alignment() noexcept { return true; }
         static constexpr std::size_t alignment() noexcept { return 16; }

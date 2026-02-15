@@ -36,7 +36,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if SSE2 is available at compile-time, to 0 otherwise.
+ * Set to 2 if SSE2 is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __SSE2__
 #define XSIMD_WITH_SSE2 2
@@ -47,7 +47,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if SSE3 is available at compile-time, to 0 otherwise.
+ * Set to 2 if SSE3 is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __SSE3__
 #define XSIMD_WITH_SSE3 2
@@ -58,7 +58,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if SSSE3 is available at compile-time, to 0 otherwise.
+ * Set to 2 if SSSE3 is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __SSSE3__
 #define XSIMD_WITH_SSSE3 2
@@ -69,7 +69,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if SSE4.1 is available at compile-time, to 0 otherwise.
+ * Set to 2 if SSE4.1 is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __SSE4_1__
 #define XSIMD_WITH_SSE4_1 2
@@ -80,7 +80,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if SSE4.2 is available at compile-time, to 0 otherwise.
+ * Set to 2 if SSE4.2 is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __SSE4_2__
 #define XSIMD_WITH_SSE4_2 2
@@ -91,7 +91,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if AVX is available at compile-time, to 0 otherwise.
+ * Set to 2 if AVX is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX__
 #define XSIMD_WITH_AVX 2
@@ -102,7 +102,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if AVX2 is available at compile-time, to 0 otherwise.
+ * Set to 2 if AVX2 is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX2__
 #define XSIMD_WITH_AVX2 2
@@ -113,7 +113,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if AVXVNNI is available at compile-time, to 0 otherwise.
+ * Set to 2 if AVXVNNI is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVXVNNI__
 #define XSIMD_WITH_AVXVNNI 2
@@ -124,7 +124,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if FMA3 for SSE is available at compile-time, to 0 otherwise.
+ * Set to 2 if FMA3 for SSE is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __FMA__
 
@@ -153,7 +153,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if FMA3 for AVX is available at compile-time, to 0 otherwise.
+ * Set to 2 if FMA3 for AVX is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __FMA__
 
@@ -201,7 +201,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if FMA4 is available at compile-time, to 0 otherwise.
+ * Set to 2 if FMA4 is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __FMA4__
 #define XSIMD_WITH_FMA4 2
@@ -212,30 +212,31 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if AVX512F is available at compile-time, to 0 otherwise.
+ * Set to 2 if AVX512F is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512F__
+#define XSIMD_WITH_AVX512F 2
+#else
+#define XSIMD_WITH_AVX512F 0
+#endif
+
 // AVX512 instructions are supported starting with gcc 6
 // see https://www.gnu.org/software/gcc/gcc-6/changes.html
+#if XSIMD_WITH_AVX512F
 // check clang first, newer clang always defines __GNUC__ = 4
 #if defined(__clang__) && __clang_major__ >= 6
-#define XSIMD_WITH_AVX512F 2
 #elif defined(__GNUC__) && __GNUC__ < 6
+#undef XSIMD_WITH_AVX512F
 #define XSIMD_WITH_AVX512F 0
-#else
-#define XSIMD_WITH_AVX512F 2
-#if __GNUC__ == 6
+#elif __GNUC__ == 6
 #define XSIMD_AVX512_SHIFT_INTRINSICS_IMM_ONLY 1
 #endif
-#endif
-#else
-#define XSIMD_WITH_AVX512F 0
 #endif
 
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if AVX512CD is available at compile-time, to 0 otherwise.
+ * Set to 2 if AVX512CD is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512CD__
 // Avoids repeating the GCC workaround over and over
@@ -247,7 +248,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if AVX512DQ is available at compile-time, to 0 otherwise.
+ * Set to 2 if AVX512DQ is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512DQ__
 #define XSIMD_WITH_AVX512DQ XSIMD_WITH_AVX512F
@@ -258,7 +259,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if AVX512BW is available at compile-time, to 0 otherwise.
+ * Set to 2 if AVX512BW is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512BW__
 #define XSIMD_WITH_AVX512BW XSIMD_WITH_AVX512F
@@ -269,7 +270,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if AVX512ER is available at compile-time, to 0 otherwise.
+ * Set to 2 if AVX512ER is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512ER__
 #define XSIMD_WITH_AVX512ER XSIMD_WITH_AVX512F
@@ -280,7 +281,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if AVX512PF is available at compile-time, to 0 otherwise.
+ * Set to 2 if AVX512PF is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512PF__
 #define XSIMD_WITH_AVX512PF XSIMD_WITH_AVX512F
@@ -291,7 +292,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if AVX512IFMA is available at compile-time, to 0 otherwise.
+ * Set to 2 if AVX512IFMA is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512IFMA__
 #define XSIMD_WITH_AVX512IFMA XSIMD_WITH_AVX512F
@@ -302,7 +303,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if AVX512VBMI is available at compile-time, to 0 otherwise.
+ * Set to 2 if AVX512VBMI is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512VBMI__
 #define XSIMD_WITH_AVX512VBMI XSIMD_WITH_AVX512F
@@ -313,7 +314,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if AVX512VBMI2 is available at compile-time, to 0 otherwise.
+ * Set to 2 if AVX512VBMI2 is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512VBMI2__
 #define XSIMD_WITH_AVX512VBMI2 XSIMD_WITH_AVX512F
@@ -324,7 +325,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if AVX512VNNI is available at compile-time, to 0 otherwise.
+ * Set to 2 if AVX512VNNI is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #ifdef __AVX512VNNI__
 
@@ -346,7 +347,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if NEON64 is available at compile-time, to 0 otherwise.
+ * Set to 2 if NEON64 is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #if defined(__aarch64__) || defined(_M_ARM64)
 #define XSIMD_WITH_NEON64 2
@@ -357,7 +358,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if NEON is available at compile-time, to 0 otherwise.
+ * Set to 2 if NEON is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #if (defined(__ARM_NEON) && __ARM_ARCH >= 7) || XSIMD_WITH_NEON64
 #define XSIMD_WITH_NEON 2
@@ -368,7 +369,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if i8mm neon64 extension is available at compile-time, to 0 otherwise.
+ * Set to 2 if i8mm neon64 extension is available at compile-time, 1 if available with a runtime check, 0 otherwise.
  */
 #if defined(__ARM_FEATURE_MATMUL_INT8)
 #define XSIMD_WITH_I8MM_NEON64 2
@@ -379,7 +380,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if SVE is available and bit width is pre-set at compile-time, to 0 otherwise.
+ * Set to 2 if SVE is available and bit width is pre-set at compile-time, to 0 otherwise.
  */
 #if defined(__ARM_FEATURE_SVE) && defined(__ARM_FEATURE_SVE_BITS) && __ARM_FEATURE_SVE_BITS > 0
 #define XSIMD_WITH_SVE 2
@@ -392,7 +393,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if RVV is available and bit width is pre-set at compile-time, to 0 otherwise.
+ * Set to 2 if RVV is available and bit width is pre-set at compile-time, to 0 otherwise.
  */
 #if defined(__riscv_vector) && defined(__riscv_v_fixed_vlen) && __riscv_v_fixed_vlen > 0
 #define XSIMD_WITH_RVV 2
@@ -405,7 +406,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if WebAssembly SIMD is available at compile-time, to 0 otherwise.
+ * Set to 2 if WebAssembly SIMD is available at compile-time, 0 otherwise.
  */
 #ifdef __EMSCRIPTEN__
 #define XSIMD_WITH_WASM 2
@@ -416,7 +417,7 @@
 /**
  * @ingroup xsimd_config_macro
  *
- * Set to 1 if VMX with VSX extension is available at compile-time, to 0 otherwise.
+ * Set to 2 if VMX with VSX extension is available at compile-time, 0 otherwise.
  */
 #if defined(__VEC__) && defined(__VSX__)
 #define XSIMD_WITH_VSX 2
