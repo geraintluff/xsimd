@@ -32,6 +32,7 @@ namespace xsimd
     struct unavailable
     {
         static constexpr bool supported() noexcept { return false; }
+        static constexpr bool optional() noexcept { return false; }
         static constexpr bool available() noexcept { return false; }
         static constexpr std::size_t alignment() noexcept { return 0; }
         static constexpr bool requires_alignment() noexcept { return false; }
@@ -144,6 +145,31 @@ namespace xsimd
         {
         };
 
+        // Filter archlists Archs, picking only optional archs and adding
+        // them to L.
+        template <class L, class... Archs>
+        struct optional_helper;
+
+        template <class L>
+        struct optional_helper<L, arch_list<>>
+        {
+            using type = L;
+        };
+
+        template <class L, class Arch, class... Archs>
+        struct optional_helper<L, arch_list<Arch, Archs...>>
+            : optional_helper<
+                  std::conditional_t<Arch::optional(),
+                                     typename L::template add<Arch>, L>,
+                  arch_list<Archs...>>
+        {
+        };
+
+        template <class... Archs>
+        struct optional : optional_helper<arch_list<>, Archs...>
+        {
+        };
+        
         // Joins all arch_list Archs in a single arch_list.
         template <class... Archs>
         struct join;
@@ -175,6 +201,8 @@ namespace xsimd
     using all_architectures = typename detail::join<all_power_architectures, all_riscv_architectures, all_wasm_architectures, all_arm_architectures, all_x86_architectures>::type;
 
     using supported_architectures = typename detail::supported<all_architectures>::type;
+    using optional_architectures = typename detail::optional<all_architectures>::type;
+    using fallback_architectures = typename optional_architectures::template add<typename supported_architectures::best>;
 
     using x86_arch = typename detail::supported<all_x86_architectures>::type::best;
     using arm_arch = typename detail::supported<all_arm_architectures>::type::best;
@@ -229,7 +257,7 @@ namespace xsimd
     }
 
     // Generic function dispatch, à la ifunc
-    template <class ArchList = supported_architectures, class F>
+    template <class ArchList = fallback_architectures, class F>
     XSIMD_INLINE detail::dispatcher<F, ArchList> dispatch(F&& f) noexcept
     {
         return { std::forward<F>(f) };
